@@ -1,0 +1,887 @@
+
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <title>Peraturan Admin — Friends Family</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --panel: #111c2d;
+      --panel2: #17243a;
+      --line: #263750;
+      --text: #edf3fb;
+      --muted: #9aabc1;
+      --gold: #d8b878;
+      --gold2: #f0d9a5;
+      --blue: #7da7d8;
+      --danger: #e38e8e;
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: radial-gradient(ellipse at 80% -10%, #263956 0, transparent 38%), var(--bg);
+      color: var(--text);
+      font: 15px/1.7 Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+
+    button, input {
+      font: inherit;
+    }
+
+    /* Menghilangkan efek warna kotak biru/tap highlight pada HP */
+    button, input, a, .role-card {
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      padding: 26px 18px;
+      border-right: 1px solid var(--line);
+      background: rgba(13, 23, 39, 0.94);
+      backdrop-filter: blur(16px);
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      z-index: 5;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 4px 8px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border: 1px solid #b99b62;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: var(--gold2);
+      font-family: Georgia, serif;
+      font-size: 19px;
+      letter-spacing: -2px;
+    }
+
+    .brand strong {
+      display: block;
+      letter-spacing: 2px;
+      font-size: 13px;
+    }
+
+    .brand small {
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 1.5px;
+    }
+
+    .nav-label {
+      color: #71839c;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.7px;
+      padding: 0 10px;
+      margin: 2px 0 5px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 5px;
+    }
+
+    .nav button {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: #b6c4d6;
+      padding: 10px 12px;
+      border-radius: 11px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      transition: 0.2s;
+    }
+
+    .nav button:hover {
+      background: #1b2a40;
+      color: #ffffff;
+    }
+
+    .nav button.active {
+      background: linear-gradient(100deg, #34465f, #1d3049);
+      color: var(--gold2);
+      box-shadow: inset 3px 0 var(--gold);
+    }
+
+    .nav .ico {
+      width: 20px;
+      text-align: center;
+      color: var(--gold);
+    }
+
+    .side-foot {
+      margin-top: auto;
+      color: #72839b;
+      font-size: 11px;
+      padding: 12px 9px;
+      border-top: 1px solid var(--line);
+    }
+
+    /* Main Area */
+    .main {
+      min-width: 0;
+    }
+
+    .topbar {
+      height: 72px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(18px, 4vw, 54px);
+      background: rgba(13, 23, 39, 0.66);
+      position: sticky;
+      top: 0;
+      z-index: 4;
+      backdrop-filter: blur(14px);
+    }
+
+    .crumb {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .menu-btn {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .content {
+      max-width: 1050px;
+      margin: auto;
+      padding: 42px clamp(18px, 4vw, 54px) 80px;
+    }
+
+    /* Hero Component */
+    .hero {
+      border: 1px solid #46536a;
+      background: linear-gradient(120deg, #1c2b40, #111d30 68%, #2a2c35);
+      border-radius: 24px;
+      padding: clamp(24px, 5vw, 48px);
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .hero:after {
+      content: "FF";
+      position: absolute;
+      right: 4%;
+      top: -40px;
+      font: 200px Georgia, serif;
+      color: rgba(216, 184, 120, 0.05);
+      letter-spacing: -25px;
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      letter-spacing: 2.5px;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .hero h1 {
+      font: clamp(30px, 5vw, 48px)/1.12 Georgia, serif;
+      letter-spacing: 0.4px;
+      margin: 12px 0;
+    }
+
+    .hero p {
+      color: #b7c5d7;
+      max-width: 650px;
+      margin: 0;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .pill {
+      font-size: 11px;
+      color: #e4d4b4;
+      border: 1px solid #786747;
+      border-radius: 99px;
+      padding: 5px 10px;
+      background: rgba(216, 184, 120, 0.07);
+    }
+
+    /* Stats Grid */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 18px 0 30px;
+    }
+
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      padding: 16px;
+    }
+
+    .stat b {
+      font: 27px Georgia, serif;
+      color: var(--gold2);
+      display: block;
+    }
+
+    .stat span {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* Content Cards & Sections */
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 14px;
+      margin: 34px 0 14px;
+    }
+
+    .section-head h2 {
+      font: 27px Georgia, serif;
+      margin: 0;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      font-size: 12px;
+      margin: 3px 0 0;
+    }
+
+    .search {
+      width: min(270px, 100%);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 9px 12px;
+      color: var(--text);
+      outline: none;
+    }
+
+    .search:focus {
+      border-color: var(--gold);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .role-card {
+      background: linear-gradient(145deg, #17253a, #111b2b);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .role-card:hover {
+      transform: translateY(-2px);
+      border-color: #9e875c;
+    }
+
+    .role-card .num {
+      font-size: 10px;
+      color: var(--gold);
+      letter-spacing: 1.6px;
+    }
+
+    .role-card h3 {
+      font: 21px Georgia, serif;
+      margin: 7px 0;
+    }
+
+    .role-card p {
+      color: var(--muted);
+      font-size: 12px;
+      margin: 0;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      padding: clamp(18px, 3vw, 28px);
+      margin-top: 16px;
+    }
+
+    .panel h2 {
+      font: 27px Georgia, serif;
+      margin: 0 0 5px;
+    }
+
+    .panel .intro {
+      color: var(--muted);
+      margin: 0 0 20px;
+    }
+
+    .article h3 {
+      font-size: 16px;
+      color: var(--gold2);
+      margin: 25px 0 8px;
+    }
+
+    .article h3:first-child {
+      margin-top: 0;
+    }
+
+    .article ol, .article ul {
+      padding-left: 23px;
+      color: #d5dfeb;
+    }
+
+    .article li {
+      padding: 3px 0 3px 4px;
+    }
+
+    .article li::marker {
+      color: var(--gold);
+    }
+
+    .article p {
+      color: #d5dfeb;
+    }
+
+    .callout {
+      border-left: 3px solid var(--gold);
+      background: rgba(216, 184, 120, 0.07);
+      padding: 13px 16px;
+      border-radius: 0 10px 10px 0;
+      color: #e7d9bd;
+      margin: 18px 0;
+    }
+
+    .callout-danger {
+      border-left: 3px solid var(--danger);
+      background: rgba(227, 142, 142, 0.1);
+      color: #fca5a5;
+    }
+
+    /* Matrix Table */
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      margin: 16px 0;
+    }
+
+    .matrix {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 650px;
+      font-size: 12px;
+    }
+
+    .matrix th, .matrix td {
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: center;
+    }
+
+    .matrix th {
+      background: #1a2940;
+      color: var(--gold2);
+    }
+
+    .matrix td:first-child {
+      text-align: left;
+      color: #dce5ef;
+    }
+
+    .footer {
+      margin-top: 42px;
+      padding: 22px 10px;
+      border-top: 1px solid var(--line);
+      text-align: center;
+      color: #7788a0;
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 850px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 280px;
+        transform: translateX(-105%);
+        transition: 0.25s;
+        box-shadow: var(--shadow);
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .menu-btn {
+        display: inline-block;
+      }
+      .topbar {
+        padding: 0 16px;
+      }
+      .content {
+        padding-top: 24px;
+      }
+      .stats {
+        gap: 8px;
+      }
+      .stat {
+        padding: 12px;
+      }
+      .cards {
+        grid-template-columns: 1fr;
+      }
+      .section-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .search {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">FF</div>
+        <div>
+          <strong>FRIENDS FAMILY</strong>
+          <small>ADMIN HANDBOOK</small>
+        </div>
+      </div>
+
+      <div>
+        <div class="nav-label">NAVIGASI UTAMA</div>
+        <nav class="nav" id="mainNav">
+          <button class="active" data-page="home"><span class="ico">⌂</span>Beranda</button>
+          <button data-page="structure"><span class="ico">♙</span>Struktur Organisasi</button>
+          <button data-page="coordination"><span class="ico">⇄</span>Koordinasi & Keputusan</button>
+          <button data-page="ethics"><span class="ico">◇</span>Etika & Kedisiplinan</button>
+          <button data-page="sanctions"><span class="ico">⚖</span>Sanksi & Evaluasi</button>
+        </nav>
+      </div>
+
+      <div>
+        <div class="nav-label">PANDUAN BERDASARKAN ROLE</div>
+        <nav class="nav" id="roleNav">
+          <button data-page="founder"><span class="ico">✦</span>Founder</button>
+          <button data-page="ketum"><span class="ico">♛</span>Ketua Umum</button>
+          <button data-page="waketum"><span class="ico">♜</span>Wakil Ketua Umum</button>
+          <button data-page="owner"><span class="ico">◈</span>Owner Cabang</button>
+          <button data-page="ketua"><span class="ico">♟</span>Ketua Cabang</button>
+          <button data-page="admin"><span class="ico">◉</span>Admin Biasa</button>
+        </nav>
+      </div>
+
+      <div class="side-foot">
+        DOKUMEN INTERNAL · FRIENDS FAMILY<br>
+        Komunitas Grup WhatsApp Virtual.
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <button class="btn menu-btn" id="menuBtn" aria-label="Buka menu">☰</button>
+          <div class="crumb" id="crumb">Friends Family / Beranda</div>
+        </div>
+      </header>
+      <div class="content" id="content"></div>
+    </main>
+  </div>
+
+  <script>
+    const pages = {
+      home: {
+        title: 'Pedoman Admin',
+        sub: 'Panduan santai untuk menjaga ketertiban, keaktifan, dan kenyamanan di seluruh grup WhatsApp Friends Family.',
+        html: `
+          <div class="hero">
+            <div class="eyebrow">OFFICIAL COMMUNITY HANDBOOK</div>
+            <h1>Admin Family<br>Peraturan Admin WA</h1>
+            <p>Panduan pengurus dan admin grup WhatsApp virtual Friends Family. Dibuat santai tapi santun, demi menjaga grup tetap ramai, seru, dan aman dari perusuh.</p>
+            <div class="hero-meta">
+              <span class="pill">6 Role Admin</span>
+              <span class="pill">Grup Virtual WhatsApp</span>
+              <span class="pill">100% Online (No Kopdar)</span>
+            </div>
+          </div>
+          <div class="stats">
+            <div class="stat"><b>03</b><span>Pengurus Pusat</span></div>
+            <div class="stat"><b>Multi</b><span>Grup WA Cabang</span></div>
+            <div class="stat"><b>06</b><span>Tingkatan Role</span></div>
+          </div>
+
+          <div class="callout callout-danger">
+            <strong>⚠️ PERINGATAN KEAMANAN UTAMA:</strong><br>
+            Role <strong>ADMIN BIASA DILARANG KERAS</strong> menjadikan siapapun sebagai admin grup! <strong>SEMUA ADMIN</strong> dilarang gampang percaya pada siapapun di chat pribadi (Japri). Jika ada yang mengaku Founder/Owner/Ketua di PC, <strong>MINTA MEREKA MENUNJUKKAN KARTU ADMIN RESMI</strong>. Jika tidak bisa, 100% PENIPU ATAU CHAT PALSU!
+          </div>
+
+          <div class="section-head">
+            <div>
+              <h2>Jelajahi Peraturan</h2>
+              <p>Pilih topik yang ingin kamu baca.</p>
+            </div>
+            <input class="search" id="search" placeholder="Cari menu atau Role…">
+          </div>
+          <div class="cards" id="homeCards"></div>
+          <div class="panel">
+            <h2>Prinsip Utama</h2>
+            <p class="intro">Role admin adalah tanggung jawab untuk meramaikan dan menjaga kenyamanan grup chat, bukan buat gaya-gayaan.</p>
+            <div class="callout">Tugas admin adalah bikin anggota betah nimbrung, mengawasi obrolan dari spam/perusuh, serta saling merangkul sesama anggota. Jangan ada admin yang bertindak sewenang-wenang (asal kick/kick member tanpa alasan yang jelas).</div>
+            <p>Founder adalah pemegang akun & grup tertinggi. Ketua Umum dan Waketum membantu mengkoordinasikan grup-grup cabang, sedangkan Owner & Ketua Cabang fokus mengurus keramaian di grup masing-masing.</p>
+          </div>
+        `
+      },
+      structure: {
+        title: 'Struktur Organisasi',
+        sub: 'Susunan pengurus dan pengelola grup WhatsApp Friends Family.',
+        html: `
+          <div class="panel article">
+            <h2>Struktur Kepengurusan Grup</h2>
+            <p class="intro">Pembagian tugas admin agar koordinasi antar grup WA tetap berjalan lancar.</p>
+            <h3>A. Pengurus Pusat (Pusat WA)</h3>
+            <ol><li>1 Founder.</li><li>1 Ketua Umum.</li><li>1 Wakil Ketua Umum.</li></ol>
+            <h3>B. Pengurus Cabang (Admin Grup Cabang)</h3>
+            <ol><li>1 Owner Cabang.</li><li>1 Ketua Cabang.</li><li>Admin Biasa (sesuai kebutuhan grup).</li></ol>
+            <h3>Hierarki Admin</h3>
+            <ol><li>Founder.</li><li>Ketua Umum.</li><li>Wakil Ketua Umum.</li><li>Owner Cabang.</li><li>Ketua Cabang.</li><li>Admin Biasa.</li></ol>
+            <div class="callout">Semua admin berkedudukan sama di mata member sebagai pengayom, namun untuk keputusan teknis grup (seperti urusan fitur grup, pengangkatan admin, atau pembubaran cabang WA), silakan ikuti hierarki di atas.</div>
+          </div>
+          <div class="panel">
+            <h2>Ringkasan Kedudukan</h2>
+            <div class="table-wrap">
+              <table class="matrix">
+                <thead>
+                  <tr><th>Role</th><th>Lingkup Tugas di WA</th><th>Kedudukan</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Founder</td><td>Seluruh ekosistem grup WA Family</td><td>Pemilik Utama</td></tr>
+                  <tr><td>Ketua Umum</td><td>Koordinasi antar cabang & grup WA</td><td>Pengurus Pusat</td></tr>
+                  <tr><td>Wakil Ketua Umum</td><td>Membantu kelancaran koordinasi pusat</td><td>Pengurus Pusat</td></tr>
+                  <tr><td>Owner Cabang</td><td>Penanggung jawab 1 grup cabang WA</td><td>Pimpinan Cabang</td></tr>
+                  <tr><td>Ketua Cabang</td><td>Mengatur keramaian & aktivitas grup</td><td>Pelaksana Cabang</td></tr>
+                  <tr><td>Admin Biasa</td><td>Moderasi chat, kick perusuh & buat obrolan seru</td><td>Pelaksana Moderasi</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `
+      },
+      founder: {
+        title: 'Founder',
+        sub: 'Pendiri dan pemegang otoritas tertinggi di grup WhatsApp Friends Family.',
+        html: roleHtml('Founder', 'Pemegang keputusan tertinggi seluruh grup WA Family.',
+          ['Menentukan arah perkembangan komunitas grup WA.', 'Membuat dan meresmikan grup-grup baru atau menutup grup yang pasif.', 'Menetapkan peraturan utama di dalam grup WhatsApp.', 'Menjaga keharmonisan dan keaktifan antar pengurus cabang.', 'Menyelesaikan kendala atau konflik berat yang tidak selesai di tingkat cabang.'],
+          ['Wewenang penuh menjadikan atau mencopot admin di semua grup WA.', 'Berhak menambah, merubah, atau menghapus peraturan komunitas.', 'Berhak merestrukturisasi pengurus jika ada admin yang tidak aktif/bermasalah.', 'Berhak membatalkan keputusan admin lain jika dinilai merugikan grup.', 'Memiliki keputusan akhir dalam segala masalah organisasi grup.'],
+          ['Keputusan strategis Founder bersifat final.', 'Tidak ada admin lain yang berhak mencopot role Founder atau membatalkan keputusannya.']
+        )
+      },
+      ketum: {
+        title: 'Ketua Umum',
+        sub: 'Pengurus pusat yang mengoordinasikan seluruh grup cabang WhatsApp.',
+        html: roleHtml('Ketua Umum', 'Mengoordinasikan aktivitas obrolan dan keaktifan di semua cabang.',
+          ['Mengawasi keaktifan dan kenyamanan grup-grup cabang WA.', 'Menjadi wadah curhat/laporan dari para Owner Cabang.', 'Memastikan rule utama dari Founder diterapkan di setiap grup.', 'Menyelesaikan kesalahpahaman atau perselisihan antar admin cabang.', 'Menjaga agar suasana grup antar cabang tetap solid dan damai.'],
+          ['Berhak memberikan arahan keramaian atau event online (game/chat) ke cabang.', 'Berhak meminta update keaktifan grup dari Owner Cabang.', 'Berhak menegur admin/owner cabang yang melanggar aturan santun.', 'Berhak merekomendasikan penggantian Owner Cabang ke Founder.'],
+          ['Tidak berhak merubah peraturan utama tanpa izin Founder.', 'Tidak berhak mengeluarkan (kick) Owner atau Founder dari grup pusat tanpa diskusi.', 'Wajib melaporkan kejadian penting di grup-grup ke Founder.']
+        )
+      },
+      waketum: {
+        title: 'Wakil Ketua Umum',
+        sub: 'Pendamping Ketua Umum dalam mengawasi grup-grup WhatsApp.',
+        html: roleHtml('Wakil Ketua Umum', 'Membantu Ketua Umum dalam memantau dan meramaikan grup cabang.',
+          ['Membantu Ketua Umum memantau obrolan di grup-grup cabang.', 'Membantu mencarikan solusi jika ada grup cabang yang sepi.', 'Menyampaikan aspirasi admin cabang ke Ketua Umum / Founder.', 'Membantu menengahi percekcokan di obrolan grup jika dibutuhkan.'],
+          ['Berhak memberikan arahan atau masukan santai kepada para Owner Cabang.', 'Berhak memberi teguran ringan jika ada admin cabang yang memicu keributan.', 'Berhak mewakili Ketua Umum jika sedang offline atau berhalangan.'],
+          ['Tidak berhak mengambil keputusan besar secara sepihak tanpa diskusi dengan Ketum / Founder.', 'Tidak berhak mencopot admin cabang secara permanen tanpa persetujuan pusat.']
+        )
+      },
+      owner: {
+        title: 'Owner Cabang',
+        sub: 'Penanggung jawab utama obrolan dan ketertiban di 1 grup cabang.',
+        html: roleHtml('Owner Cabang', 'Mengelola dan meramaikan grup cabang yang diampunya.',
+          ['Menjaga keramaian obrolan dan keharmonisan member di grup cabangnya.', 'Memastikan seluruh admin cabang menjalankan tugas moderasi dengan baik.', 'Menjadi jembatan antara member/admin cabang dengan pengurus pusat.', 'Menindak tegas member perusuh, spamer, atau penyebar link berbahaya.', 'Memastikan info penting dari pusat tersampaikan di grup cabangnya.'],
+          ['Berhak mengatur rules internal ringan (seperti jam open/close chat jika diperlukan).', 'Berhak menunjuk atau merekomendasikan calon Admin Biasa di cabangnya.', 'Berhak memberikan teguran atau mencopot Admin Biasa yang menyalahgunakan akses.', 'Berhak kick member nakal yang sudah berkali-kali melanggar aturan.'],
+          ['Dilarang membuat rules cabang yang bertentangan dengan rules utama Family.', 'Dilarang mengangkat Ketua Cabang baru tanpa mengabari Founder/Ketum.', 'Wajib berkordinasi dengan pusat jika ada insiden serius di grup.']
+        )
+      },
+      ketua: {
+        title: 'Ketua Cabang',
+        sub: 'Koordinator harian di grup cabang untuk meramaikan obrolan.',
+        html: roleHtml('Ketua Cabang', 'Membantu Owner Cabang menjaga keramaian dan keaktifan grup.',
+          ['Membantu memicu topik obrolan seru di grup agar tidak sepi.', 'Membantu mengawasi obrolan dari respon berlebihan/toxic parah.', 'Mengkoordinasikan Admin Biasa agar responsif saat grup butuh moderasi.', 'Melaporkan ke Owner Cabang jika ada kendala di dalam grup.'],
+          ['Berhak mengarahkan Admin Biasa untuk menghapus pesan spam/NSFW.', 'Berhak menegur member yang mulai bertindak melampaui batas di chat.', 'Berhak mengusulkan member aktif untuk diangkat jadi admin ke Owner.'],
+          ['Dilarang menambah admin baru di grup WA secara mandiri tanpa persetujuan Owner/Founder.', 'Dilarang mencopot status admin lain secara sepihak.', 'Dilarang membuat kegaduhan atau memihak saat ada obrolan panas di grup.']
+        )
+      },
+      admin: {
+        title: 'Admin Biasa',
+        sub: 'Garda terdepan moderator grup WhatsApp.',
+        html: roleHtml('Admin Biasa', 'Modertor grup yang bertugas menjaga obrolan tetap aman, seru, dan kondusif.',
+          ['Meramaikan obrolan grup dan menyapa member baru yang bergabung.', 'Menghapus (Delete for Everyone) pesan spam, judi online, promo luar, atau konten tidak pantas.', 'Kick akun bot perusuh atau akun spamer yang mendadak masuk.', 'Menjaga obrolan agar tetap ramah, seru, dan tidak memicu SARA.', 'Segera melaporkan jika ada ancaman luar atau gangguan di grup chat.'],
+          ['Berhak menghapus pesan anggota yang melanggar ketertiban obrolan.', 'Berhak mendepak (kick) member perusuh/bot yang mengganggu kenyamanan.', 'Berhak mengusulkan ide game text, nubar online, atau obrolan santai grup.'],
+          [
+            'DILARANG KERAS mengangkat atau mendaftarkan siapapun jadi admin di grup WA tanpa izin resmi Founder!',
+            'JANGAN GAMPANG PERCAYA SAMA CHAT PRIBADI (JAPRI)! Jika ada akun asing yang ngechat dan mengaku Founder/Owner/Ketua, JANGAN LANGSUNG PERCAYA! Minta dia tunjukkan Kartu Admin Resmi. Jika tidak bisa, fixed itu PENIPU / BOT!',
+            'JIKA DIANCAM (misal diancam nomornya mau di-bug/ban/viralkan), kamu boleh keluar (left) dari grup sementara demi keamanan diri. JANGAN SERAHKAN AKSES ADMIN KE PENIPU HANYA KARENA ANCAMAN!',
+            'Dilarang mencopot status admin teman sejawat.',
+            'Dilarang kick member sesuka hati tanpa sebab yang jelas (misal cuma gara-gara dendam pribadi).',
+            'Dilarang menyebarkan nomor telepon pribadi member ke luar tanpa izin.'
+          ]
+        ) + `
+          <div class="callout callout-danger" style="margin-top: 20px;">
+            <h3>⚠️ RESPON CEPAT JIKA ADA ANCAMAN BUG / PENIPU DI WA</h3>
+            <p><strong>1. Cek Kartu Admin:</strong> Setiap pengurus asli pasti punya Kartu Admin. Kalau ada yang nge-Japri ngaku Founder/Ketua tapi gak punya Kartu Admin, langsung blokir!</p>
+            <p><strong>2. Aman dari Ancaman Bug WA:</strong> Kalau penipu mengancam nomor kamu bakal di-bug/di-ban, cukup <strong>keluar dari grup WA sementara waktu</strong>. Keamanan nomor kamu tetap utama, dan jangan pernah jadikan si penipu itu sebagai admin grup!</p>
+          </div>
+        `
+      },
+      coordination: {
+        title: 'Koordinasi & Pengambilan Keputusan',
+        sub: 'Alur komunikasi dan keputusan santai di dalam grup WhatsApp.',
+        html: `
+          <div class="panel article">
+            <h2>Pasal 1 — Alur Obrolan & Koordinasi</h2>
+            <ol>
+              <li>Founder memegang kendali penuh atas kepemilikan grup WhatsApp.</li>
+              <li>Ketua Umum & Waketum mengoordinasikan kelancaran grup cabang via Grup Admin Pusat.</li>
+              <li>Owner Cabang & Ketua Cabang bertanggung jawab atas suasana obrolan di grup masing-masing.</li>
+              <li>Admin Biasa bertindak langsung meramaikan dan menghapus pesan bermasalah di grup.</li>
+              <li>Segala permasalahan internal diselesaikan secara kekeluargaan lewat obrolan santai di Grup Admin.</li>
+            </ol>
+            <h3>Pasal 2 — Pengangkatan Admin Grup WA</h3>
+            <ol>
+              <li>Pengangkatan admin baru di grup WA WAJIB mendapatkan izin resmi dari Founder.</li>
+              <li><strong>ROLE ADMIN BIASA DILARANG KERAS MENAMBAH ADMIN BARU DI GRUP WA!</strong></li>
+              <li>Owner Cabang boleh mengajukan nama member yang aktif dan ramah kepada Founder.</li>
+              <li>Penunjukan admin mempertimbangkan keaktifan nimbrung, kesopanan, dan kepedulian pada grup.</li>
+            </ol>
+            <h3>Pasal 3 — Pencopotan Status Admin</h3>
+            <ol>
+              <li>Founder berhak mencopot status admin siapapun yang melanggar aturan.</li>
+              <li>Owner Cabang berhak mencopot Admin Biasa di cabangnya jika terbukti pasif total atau menyalahgunakan wewenang kick.</li>
+              <li>Pencopotan admin tidak boleh atas dasar dendam pribadi/masalah obrolan biasa.</li>
+            </ol>
+            <h3>Pasal 4 — Penyelesaian Perkelahian di Chat</h3>
+            <ol>
+              <li>Jika ada member yang berantem di obrolan grup, admin wajib menegur secara baik-baik.</li>
+              <li>Jika masih berlanjut, ingatkan untuk lanjut via Japri agar obrolan utama grup tidak terganggu.</li>
+              <li>Jika ada yang menggunakan kata-kata kasar berlebihan/SARA, admin berhak kick sementara atau memberikan teguran keras.</li>
+            </ol>
+          </div>
+        `
+      },
+      ethics: {
+        title: 'Etika & Kedisiplinan',
+        sub: 'Sikap dan etika yang wajib dijaga oleh seluruh Admin di grup WhatsApp.',
+        html: `
+          <div class="panel article">
+            <h2>Pasal 1 — Kewajiban Admin WA</h2>
+            <ol>
+              <li>Ramah dan menyapa member (terutama member baru yang join grup).</li>
+              <li>Menjaga kata-kata agar tetap sopan dan merangkul semua member.</li>
+              <li>Aktif nimbrung obrolan di grup selama ada waktu luang.</li>
+              <li>Menjaga privasi nomor telepon anggota grup.</li>
+              <li>Menjadi penengah yang netral saat ada perdebatan panas di chat.</li>
+              <li>Selalu memverifikasi siapa saja yang mengaku pengurus melalui Kartu Admin Resmi.</li>
+            </ol>
+            <h3>Pasal 2 — Hal yang Dilarang (Do Not Do)</h3>
+            <ol>
+              <li><strong>MENJADIKAN ORANG LAIN ADMIN TANPA PERSETUJUAN FOUNDER.</strong></li>
+              <li>Gampang percaya chat Japri dari nomor asing yang mengaku atasan.</li>
+              <li>Asal kick member tanpa alasan yang jelas atau hanya karena dendam pribadi.</li>
+              <li>Mengirim konten NSFW/Pornografi/Judi Online ke dalam grup.</li>
+              <li>Spam sticker/media berlebihan yang bikin obrolan tenggelam dan HP member lag.</li>
+              <li>Memakai fitur admin untuk menakut-nakuti atau mengintimidasi member.</li>
+              <li>Menyebarkan fitnah atau memicu permusuhan antar sesama admin/member.</li>
+            </ol>
+          </div>
+        `
+      },
+      sanctions: {
+        title: 'Sanksi & Evaluasi',
+        sub: 'Penanganan bagi admin yang melanggar aturan atau menyalahgunakan wewenang.',
+        html: `
+          <div class="panel article">
+            <h2>Pasal 1 — Tingkatan Sanksi Admin</h2>
+            <h3>1. Teguran di Chat Admin</h3>
+            <p>Diberikan jika admin melakukan kelalaian ringan (misal: jarang nimbrung atau kurang responsif saat ada spammer).</p>
+            <h3>2. Peringatan Penting</h3>
+            <p>Diberikan jika admin mulai sering melanggar etika chat atau sering asal kick member.</p>
+            <h3>3. Demosi / Pencopotan Status Admin</h3>
+            <p>Diberikan jika admin terbukti menyalahgunakan wewenang admin atau pasif dalam jangka waktu lama tanpa kabar.</p>
+            <h3>4. Kick & Ban Permanen dari Komunitas</h3>
+            <p>Diberikan untuk pelanggaran berat yang merugikan grup secara keseluruhan.</p>
+
+            <h3>Pasal 2 — Kategori Pelanggaran Berat</h3>
+            <ol>
+              <li>Mengangkat/menambah admin grup tanpa izin sah dari Founder.</li>
+              <li>Memberikan akses admin ke penipu/bot karena terkecoh Japri palsu.</li>
+              <li>Menjual atau menyebarkan database nomor member ke pihak luar.</li>
+              <li>Sengaja merusak (mengacak-acak) nama grup, deskripsi, atau foto profil grup tanpa koordinasi.</li>
+              <li>Membocorkan isi obrolan rahasia grup admin ke publik.</li>
+            </ol>
+
+            <h3>Pasal 3 — Keaktifan Santai</h3>
+            <ol>
+              <li>Admin tidak dituntut 24 jam standby di WA, namun diharapkan responsif jika ada panggilan darurat (misal ada bot spammer).</li>
+              <li>Jika admin ingin vakum/istirahat sementara dari WA karena kesibukan dunia nyata, cukup kabari Owner atau Ketua Cabang.</li>
+            </ol>
+          </div>
+        `
+      }
+    };
+
+    function listBlock(title, items) {
+      return `<h3>${title}</h3><ol>${items.map(x => `<li>${x}</li>`).join('')}</ol>`;
+    }
+
+    function roleHtml(name, desc, tasks, powers, limits) {
+      return `
+        <div class="panel article">
+          <h2>${name}</h2>
+          <p class="intro">${desc}</p>
+          ${listBlock('A. Tugas dan Tanggung Jawab', tasks)}
+          ${listBlock('B. Hak dan Wewenang Chat', powers)}
+          ${listBlock('C. Batasan & Larangan Admin', limits)}
+        </div>
+      `;
+    }
+
+    const cardData = [
+      ['structure', '♙', 'Struktur Organisasi', 'Susunan pengurus pusat dan pengelola grup cabang.'],
+      ['founder', '✦', 'Founder', 'Pemilik utama dan pemegang otoritas seluruh grup WA.'],
+      ['ketum', '♛', 'Ketua Umum', 'Koordinator keramaian dan ketertiban lintas cabang.'],
+      ['waketum', '♜', 'Wakil Ketua Umum', 'Pendamping Ketua Umum mengawasi obrolan grup.'],
+      ['owner', '◈', 'Owner Cabang', 'Penanggung jawab utama 1 grup cabang WA.'],
+      ['ketua', '♟', 'Ketua Cabang', 'Pengatur keaktifan obrolan dan pembagi tugas admin.'],
+      ['admin', '◉', 'Admin Biasa', 'Moderator chat: pembersih spam, perusuh, dan penyapa member.'],
+      ['coordination', '⇄', 'Koordinasi & Keputusan', 'Alur pengangkatan admin, penanganan keributan, & pencopotan.'],
+      ['ethics', '◇', 'Etika & Kedisiplinan', 'Kewajiban menjaga obrolan ramah dan larangan admin.'],
+      ['sanctions', '⚖', 'Sanksi & Keaktifan', 'Tahapan sanksi dan toleransi keaktifan admin.']
+    ];
+
+    function render(page, pushHistory = true) {
+      const p = pages[page] || pages.home;
+      document.getElementById('content').innerHTML = page === 'home' 
+        ? p.html 
+        : p.html + `<div class="footer">FRIENDS FAMILY COMMUNITY · PERATURAN ADMIN WA VIRTUAL</div>`;
+
+      document.getElementById('crumb').textContent = 'Friends Family / ' + p.title;
+
+      document.querySelectorAll('[data-page]').forEach(b => {
+        b.classList.toggle('active', b.dataset.page === page);
+      });
+
+      document.getElementById('sidebar').classList.remove('open');
+
+      if (pushHistory && history.state?.page !== page) {
+        history.pushState({ page: page }, '', `#${page}`);
+      }
+
+      window.scrollTo(0, 0);
+
+      if (page === 'home') {
+        document.getElementById('homeCards').innerHTML = cardData.map(([id, ico, title, desc]) => `
+          <div class="role-card" data-open="${id}">
+            <div class="num">BACA PEDOMAN</div>
+            <h3>${ico} &nbsp;${title}</h3>
+            <p>${desc}</p>
+          </div>
+        `).join('');
+
+        document.querySelectorAll('[data-open]').forEach(c => {
+          c.onclick = () => render(c.dataset.open);
+        });
+
+        document.getElementById('search').addEventListener('input', e => {
+          const q = e.target.value.toLowerCase();
+          document.querySelectorAll('.role-card').forEach(c => {
+            c.classList.toggle('hidden', !c.innerText.toLowerCase().includes(q));
+          });
+        });
+      }
+    }
+
+    // Event listener untuk navigasi sejarah browser / tombol back HP
+    window.addEventListener('popstate', (e) => {
+      const page = e.state?.page || location.hash.replace('#', '') || 'home';
+      render(page, false);
+    });
+
+    document.querySelectorAll('[data-page]').forEach(b => {
+      b.addEventListener('click', () => render(b.dataset.page));
+    });
+
+    document.getElementById('menuBtn').onclick = () => {
+      document.getElementById('sidebar').classList.toggle('open');
+    };
+
+    // Inisialisasi awal
+    const initialPage = location.hash.replace('#', '') || 'home';
+    history.replaceState({ page: initialPage }, '', `#${initialPage}`);
+    render(initialPage, false);
+  </script>
+</body>
+</html>
